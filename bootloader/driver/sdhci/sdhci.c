@@ -149,7 +149,7 @@ static sdhci_error set_clock(int ctlr, bool slow) {
     clk_val |= SDHCI_CLOCK_CARD_EN;
     sdhci_reg_write_16(ctlr, SDHCI_CLOCK_CONTROL, clk_val);
 
-    usleep(10000);
+    usleep(50000);
     return SDHCI_NO_ERROR;
 }
 
@@ -579,18 +579,33 @@ static sdhci_error initialise(int ctlr) {
         return SDHCI_NO_ERROR;
     }
 
+    bool card_present =
+        sdhci_reg_read(ctlr, SDHCI_PRESENT_STATE) & SDHCI_CARD_PIN;
+    if (!card_present) {
+        return SDHCI_CARD_NOT_PRESENT;
+    }
+
+    card_present =
+        sdhci_reg_read(ctlr, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT;
+    uint64_t end_time;
+    uint64_t curr_time;
+    board_timer_get(&curr_time);
+    end_time = curr_time + 10000000;
+    while (!card_present && curr_time < end_time) {
+        card_present =
+            sdhci_reg_read(ctlr, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT;
+        board_timer_get(&curr_time);
+    }
+    if (!card_present) {
+        return SDHCI_CARD_NOT_PRESENT;
+    }
+
     err = reset_config(ctlr);
     if (err != SDHCI_NO_ERROR) {
         return err;
     }
 
     config_power(ctlr);
-
-    bool card_present =
-        sdhci_reg_read(ctlr, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT;
-    if (!card_present) {
-        return SDHCI_CARD_NOT_PRESENT;
-    }
 
     /* Set clock to 400Khz */
     err = set_clock(ctlr, true);
