@@ -23,6 +23,7 @@ directories = [
     'timer',
     'uart',
     'wdog',
+    'xpartition',
     'zlib',
 ]
 
@@ -61,5 +62,6 @@ def build(bld):
                   'flare_timer_driver',
                   'flare_uart_driver',
                   'flare_wdog_driver',
+                  'flare_xpartition_driver',
                   'flare_zlib_driver',
               ])

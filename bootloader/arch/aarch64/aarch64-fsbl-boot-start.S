@@ -67,6 +67,9 @@ _boot:
   /* Set PM configuration */
   bl pm_set_configuration
 
+  /* Load BOOT.BIN partitions into memory */
+  bl xpart_load_parts
+
   /* Hand off to ATF */
   b aarch64_atf_handoff
 

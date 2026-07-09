@@ -1,0 +1,46 @@
+#! /usr/bin/env python
+# encoding: utf-8
+#
+# Xilinx BOOT.BIN partitions Driver
+#
+
+import builditems
+
+sources = {
+    'default': [
+    ],
+    'versal': [
+    ],
+    'zynqmp': [
+        'xpartition.c',
+    ],
+    'zynq7000': [
+    ]
+}
+
+includes = {'default': ['../..'], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+
+defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+
+cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+
+
+def init(ctx):
+    pass
+
+
+def options(opt):
+    pass
+
+
+def configure(conf):
+    pass
+
+
+def build(bld):
+    bld.objects(target='flare_xpartition_driver',
+                features='c',
+                source=builditems.get_items(bld, sources),
+                includes=builditems.get_includes(bld, includes),
+                cflags=builditems.get_cflags(bld, cflags),
+                defines=builditems.get_defines(bld, defines))
