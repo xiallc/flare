@@ -73,7 +73,7 @@ int main(void) {
     board_hardware_setup();
     board_timer_reset();
 
-    printf("\nFlare Apache 2.0 Licensed FSBL\n");
+    printf("\nFlare FSBL (Apache 2.0 Licensed)\n");
     printf("    Build ID: %s\n", flare_build_id());
 
     cache_enable();
