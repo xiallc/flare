@@ -132,6 +132,9 @@ flash_transfer_trace(const char*                  message,
         }
         printf("\n");
     }
+#else
+    (void)message;
+    (void)transfer;
 #endif
 }
 

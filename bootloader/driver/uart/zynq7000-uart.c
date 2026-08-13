@@ -63,4 +63,5 @@ board_uart_setup(uint32_t uart)
   /*
    * Do nothing at this point in time. Set up is painted by the PS7.
    */
+  (void) uart;
 }

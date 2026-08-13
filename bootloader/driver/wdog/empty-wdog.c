@@ -28,6 +28,7 @@ wdog_init(void)
 void
 wdog_control(bool enable)
 {
+    (void)enable;
 }
 
 void

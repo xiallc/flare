@@ -240,7 +240,7 @@ void xpart_load_parts() {
             printf("Loading partition (%s)\n", part_name);
         }
 
-        for (int sec = 0; sec < part_hdr.sec_count; sec++) {
+        for (uint32_t sec = 0; sec < part_hdr.sec_count; sec++) {
             if (XPART_DEBUG_MODE) {
                 printf("  Section at 0x%08x (%ld bytes)\n",
                     sec_hdr.dest_load_addr_lo,

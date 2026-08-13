@@ -68,7 +68,7 @@ int main(void) {
     const char* label;
     boot_script script;
     uint32_t entry_point = 0;
-    int status = 0;
+    bool status = false;
 
     board_hardware_setup();
     board_timer_reset();
@@ -100,7 +100,7 @@ int main(void) {
             break;
         }
 
-        status = (*bp.opens[i])();
+        status = bp.opens[i]();
         if (status) {
             printf("Open failure: %s: %d\n", bp.opens_name[i], status);
             boot_failure();
@@ -112,7 +112,7 @@ int main(void) {
             break;
         }
 
-        status = (*bp.mounts[i])();
+        status = bp.mounts[i]();
         if (status) {
             printf("Mount failure: %s: %d\n", bp.mounts_name[i], status);
             boot_failure();

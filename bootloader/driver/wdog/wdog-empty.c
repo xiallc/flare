@@ -28,4 +28,5 @@ board_wdog_toggle (void)
 void
 board_wdog_control(bool enable)
 {
+  (void) enable;
 }

@@ -37,7 +37,7 @@
 
 void print_ISR() {
     uint32_t isr = *((uint32_t*)(qspi_base + GQSPI_ISR_OFST));
-   
+
     printf("GQSPI_ISR:       %8x\n", isr);
     printf("Gen_FIFO_full:      %1x     ",  ((isr>>10)&1u));
     printf("RX_FIFO_full:       %1x\n",     ((isr>>5)&1u));
@@ -78,7 +78,7 @@ static uint32_t command_word_generator(
 )
 {
   uint32_t command = 0UL;
-  
+
   /* Data clean */
   data_xfer &= 1U;
   exp &= 1U;
@@ -160,6 +160,7 @@ flash_writeLock(void)
 }
 
 size_t flash_get_padding(size_t length) {
+    (void)length;
     return 0;
 }
 
@@ -322,7 +323,7 @@ flash_error flash_Transfer(flash_transfer_buffer* transfer, bool initialised)
               break;
             }
           }
-          
+
 
           controller_command = command_wrapper
             (
@@ -378,7 +379,7 @@ flash_error flash_Transfer(flash_transfer_buffer* transfer, bool initialised)
                 ++rx_data;
                 if (rx_length > sizeof(uint32_t))
                     rx_length -= sizeof(uint32_t);
-                else 
+                else
                     rx_length = 0;
             } else {
                 usleep(100);

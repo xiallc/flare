@@ -32,6 +32,7 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
+    (void)pdrv;
     if (!sdhci_initialised(sdhci_ctlr)) {
         return STA_NOINIT;
     } else {
@@ -43,6 +44,7 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
+    (void)pdrv;
     sdhci_error err = sdhci_open(sdhci_ctlr);
     if (err == SDHCI_NO_ERROR) {
         return 0;
@@ -60,6 +62,7 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
+    (void)pdrv;
     sdhci_error err = sdhci_read(sdhci_ctlr, sector, count, (char*)buff);
     if (err != SDHCI_NO_ERROR) {
         return RES_ERROR;

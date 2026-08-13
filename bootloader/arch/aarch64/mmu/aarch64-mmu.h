@@ -355,6 +355,8 @@ static inline void aarch64_el2_mmu_setup_translation_table(
   size_t config_count
 )
 {
+  (void) config_table;
+  (void) config_count;
   uint64_t *ttb = (uint64_t *) bsp_translation_table_base;
 
   /* Use the EL3 table as we set it up earlier */
