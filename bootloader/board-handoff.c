@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Contemporary Software
+ * Copyright 2026 Contemporary Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,14 @@
  *     limitations under the License.
  */
 
-/*
- * Board Handoff.
- */
+#include <stdio.h>
 
-#if !defined(BOARD_HANDOFF_H)
-#define BOARD_HANDOFF_H
+#include <board-handoff.h>
 
-#include <stdint.h>
-
-/*
- * Processor handoff to loaded code or JTAG.
- */
-void board_handoff_exit(uint32_t address);
-void board_handoff_exit_no_mmu_reset(uint32_t address);
-void board_handoff_jtag_exit(void);
-
-/*
- * Developer no hand off, see waf --help
- */
-void board_handoff_disable(void);
-
-#endif
+void board_handoff_disable(void) {
+    if (FLARE_HANDOFF_DISABLE) {
+        printf("\nHand off disabled. Looping ... ");
+        while (true) {
+        }
+    }
+}

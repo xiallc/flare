@@ -28,36 +28,30 @@ extern void aarch64_handoff(uint32_t address);
 void
 board_handoff_exit(uint32_t address)
 {
+  board_handoff_disable();
   cache_flush_invalidate();
-
   cache_disable();
-
   aarch64_el2_mmu_disable();
-
   aarch64_handoff(address);
-
   while (true);
 }
 
 void
 board_handoff_exit_no_mmu_reset(uint32_t address)
 {
+  board_handoff_disable();
   cache_flush_invalidate();
-
   cache_disable();
-
   aarch64_handoff(address);
-
   while (true);
 }
 
 void
 board_handoff_jtag_exit(void)
 {
+  board_handoff_disable();
   cache_flush_invalidate();
-
   cache_disable();
-
   while (true)
     asm volatile("wfe");
 }

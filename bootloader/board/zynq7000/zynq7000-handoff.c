@@ -83,6 +83,7 @@ void
 board_handoff_exit(uint32_t address)
 {
   printf("Flare handing off to 0x%08x\n", address);
+  board_handoff_disable();
   board_slcr_lock();
   zynq_clear_caches();
   cache_disable();
@@ -96,6 +97,7 @@ void
 board_handoff_exit_no_mmu_reset(uint32_t address)
 {
   printf("Flare handing off to 0x%08x\n", address);
+  board_handoff_disable();
   board_slcr_lock();
   zynq_clear_caches();
   cache_disable();
@@ -107,6 +109,7 @@ board_handoff_exit_no_mmu_reset(uint32_t address)
 void
 board_handoff_jtag_exit(void)
 {
+  board_handoff_disable();
   board_slcr_lock();
   zynq_clear_caches();
   cache_disable();
