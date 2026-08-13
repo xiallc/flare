@@ -5,7 +5,6 @@
 #
 
 import buildcontrol
-import builditems
 
 directories = [
     'driver',
@@ -14,33 +13,16 @@ directories = [
     'board',
 ]
 
-sources = {
-    'default': [
-        'boot-buffer.c',
-        'boot-factory-config.c',
-        'boot-load.c',
-        'boot-script.c',
-        'datasafe.c',
-        'factory-boot.c',
-        'reset.c',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-includes = {
-    'default': [
-        '.',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'board-handoff.c',
+    'boot-buffer.c',
+    'boot-factory-config.c',
+    'boot-load.c',
+    'boot-script.c',
+    'datasafe.c',
+    'factory-boot.c',
+    'reset.c',
+]
 
 
 def init(ctx):
@@ -49,22 +31,27 @@ def init(ctx):
 
 def options(opt):
     buildcontrol.recurse(opt, directories)
+    copts = opt.get_option_group('configure options')
+    copts.add_option('--no-handoff',
+                     action='store_true',
+                     help='Disable handoff for debugging')
+    copts.add_option('--boot-delay',
+                     action='store_true',
+                     help='Disable handoff for debugging')
 
 
 def configure(conf):
     buildcontrol.recurse(conf, directories)
+    if conf.options.no_handoff:
+        conf.env.DEFINES += ['FLARE_HANDOFF_DISABLE=1']
+    else:
+        conf.env.DEFINES += ['FLARE_HANDOFF_DISABLE=0']
 
 
 def build(bld):
     buildcontrol.recurse(bld, directories)
+    uses = ['flare_fs', 'flare_arch', 'flare_board'] + bld.env.FLARE_USE
     bld.stlib(target='flare',
               features='c',
-              source=builditems.get_items(bld, sources),
-              includes=builditems.get_includes(bld, includes),
-              cflags=builditems.get_cflags(bld, cflags),
-              asflags=builditems.get_cflags(bld, cflags),
-              defines=builditems.get_defines(bld, defines),
-              use=[
-                  'flare_fs', 'flare_zynqmp_support', 'flare_aarch64_support',
-                  'flare_zynq7000_support', 'flare_arm_support'
-              ])
+              source=sources,
+              use=uses)

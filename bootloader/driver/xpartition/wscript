@@ -4,25 +4,15 @@
 # Xilinx BOOT.BIN partitions Driver
 #
 
-import builditems
+sources = []
 
-sources = {
-    'default': [
-    ],
-    'versal': [
-    ],
+board_sources = {
+    'versal': [],
     'zynqmp': [
         'xpartition.c',
     ],
-    'zynq7000': [
-    ]
+    'zynq7000': []
 }
-
-includes = {'default': ['../..'], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
 
 
 def init(ctx):
@@ -38,9 +28,7 @@ def configure(conf):
 
 
 def build(bld):
-    bld.objects(target='flare_xpartition_driver',
-                features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+    srcs = sources
+    if bld.env.FLARE_BOARD in board_sources:
+        srcs += board_sources[bld.env.FLARE_BOARD]
+    bld.objects(target='flare_xpartition_driver', features='c', source=srcs)

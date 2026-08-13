@@ -4,10 +4,9 @@
 # Flare Power Switch Driver
 #
 
-import builditems
+sources = []
 
-sources = {
-    'default': [],
+board_sources = {
     'versal': [
         'empty-power-switch.c',
     ],
@@ -18,12 +17,6 @@ sources = {
         'zynq7000-power-switch.c',
     ]
 }
-
-includes = {'default': ['../..'], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
 
 
 def init(ctx):
@@ -39,9 +32,7 @@ def configure(conf):
 
 
 def build(bld):
-    bld.objects(target='flare_power_switch_driver',
-                features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+    srcs = sources
+    if bld.env.FLARE_BOARD in board_sources:
+        srcs += board_sources[bld.env.FLARE_BOARD]
+    bld.objects(target='flare_power_switch_driver', features='c', source=srcs)

@@ -4,53 +4,24 @@
 # Flare Bootloader Filesystems
 #
 
-import buildcontrol
-import builditems
-
-directories = []
-
-sources = {
-    'default': [
-        'boot-filesystem.c',
-        'jffs2-filesystem.c',
-        'fatfs-filesystem.c',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-includes = {
-    'default': [
-        '..',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'boot-filesystem.c',
+    'jffs2-filesystem.c',
+    'fatfs-filesystem.c',
+]
 
 
 def init(ctx):
-    buildcontrol.recurse(ctx, directories)
+    pass
 
 
 def options(opt):
-    buildcontrol.recurse(opt, directories)
+    pass
 
 
 def configure(conf):
-    buildcontrol.recurse(conf, directories)
+    pass
 
 
 def build(bld):
-    buildcontrol.recurse(bld, directories)
-    bld.objects(target='flare_fs',
-                features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+    bld.objects(target='flare_fs', features='c', source=sources)

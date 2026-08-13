@@ -4,29 +4,16 @@
 # Flare ZYNQ7000 Support
 #
 
-import builditems
-
-sources = {
-    'default': [],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': [
-        'zynq7000-begin-lo.S',
-        'zynq7000-boot-plan.c',
-        'zynq7000-cache.c',
-        'zynq7000-datasafe.c',
-        'zynq7000-error.c',
-        'zynq7000-handoff.c',
-        'zynq7000-mmu.c',
-        'zynq7000_vectors.S',
-    ]
-}
-
-includes = {'default': ['../..'], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'zynq7000-begin-lo.S',
+    'zynq7000-boot-plan.c',
+    'zynq7000-cache.c',
+    'zynq7000-datasafe.c',
+    'zynq7000-error.c',
+    'zynq7000-handoff.c',
+    'zynq7000-mmu.c',
+    'zynq7000_vectors.S',
+]
 
 
 def init(ctx):
@@ -42,10 +29,4 @@ def configure(conf):
 
 
 def build(bld):
-    bld.objects(target='flare_zynq7000_support',
-                features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                asflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+    bld.objects(target='flare_board', features='c', source=sources)

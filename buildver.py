@@ -2,12 +2,7 @@ import os
 import shutil
 import time
 
-outputs = {
-    'default': ['bootloader/flare-build-id.c'],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
+sources = ['bootloader/flare-build-id.c']
 
 flare_build_ver_template = [
     '''/*
@@ -42,7 +37,8 @@ size_t flare_build_id_length() {
 }'''
 ]
 
-def set_build_id(bld):
+
+def _set_build_id(bld):
     ''' Build id is `git_hash[-m]-hex_time` where
     `-m` means the repo is dirty'''
     import waflib
@@ -63,6 +59,11 @@ def set_build_id(bld):
     bid += '-' + hex(int(time.time()))[2:]
     bld.env.BUILD_ID = bid
 
+
+def configure(conf):
+    pass
+
+
 def build(bld):
     from waflib import Task
 
@@ -80,12 +81,12 @@ def build(bld):
         always_run = True
         run_str = [create_build_ver_c]
 
-    set_build_id(bld)
+    _set_build_id(bld)
 
-    board = bld.env.FLARE_BOARD
-    outs = [bld.path.find_or_declare(file) for file in outputs['default']]
-    outs += [bld.path.find_or_declare(file) for file in outputs[board]]
+    outs = [bld.path.find_or_declare(file) for file in sources]
 
     build_ver_tsk = build_ver(env=bld.env)
     build_ver_tsk.set_outputs(outs)
     bld.add_to_group(build_ver_tsk)
+
+    bld.objects(target='flare_version', features='c', source=sources)

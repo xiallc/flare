@@ -4,29 +4,9 @@
 # Flare GPIO Driver
 #
 
-import builditems
-
-sources = {
-    'default': [
-        'gpio.c',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-includes = {
-    'default': [
-        '../..',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'gpio.c',
+]
 
 
 def init(ctx):
@@ -42,9 +22,4 @@ def configure(conf):
 
 
 def build(bld):
-    bld.objects(target='flare_gpio_driver',
-                features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+    bld.objects(target='flare_gpio_driver', features='c', source=sources)

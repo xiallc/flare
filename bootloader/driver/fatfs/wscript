@@ -4,25 +4,12 @@
 # Flare FATFS Driver
 #
 
-import builditems
-
-sources = {
-    'default': [
-        'ff.c',
-        'ffsystem.c',
-        'ffunicode.c',
-        'sdwrapper.c',
-    ],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': []
-}
-
-includes = {'default': ['../..'], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'ff.c',
+    'ffsystem.c',
+    'ffunicode.c',
+    'sdwrapper.c',
+]
 
 
 def init(ctx):
@@ -40,7 +27,5 @@ def configure(conf):
 def build(bld):
     bld.objects(target='flare_fatfs_driver',
                 features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+                source=sources,
+                includes=['.'])

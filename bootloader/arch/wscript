@@ -25,4 +25,4 @@ def configure(conf):
 
 
 def build(bld):
-    buildcontrol.recurse(bld, directories)
+    buildcontrol.recurse(bld, [bld.env.FLARE_ARCH])

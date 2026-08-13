@@ -4,24 +4,11 @@
 # Flare ARM Support
 #
 
-import builditems
-
-sources = {
-    'default': [],
-    'versal': [],
-    'zynqmp': [],
-    'zynq7000': [
-        'arm-fsbl-boot-start.S',
-        'cpu_init.S',
-        'crt0.S',
-    ]
-}
-
-includes = {'default': ['../..'], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'arm-fsbl-boot-start.S',
+    'cpu_init.S',
+    'crt0.S',
+]
 
 
 def init(ctx):
@@ -37,10 +24,7 @@ def configure(conf):
 
 
 def build(bld):
-    bld.objects(target='flare_arm_support',
+    bld.objects(target='flare_arch',
                 features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                asflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+                source=sources,
+                use=['flare_xilinx'])

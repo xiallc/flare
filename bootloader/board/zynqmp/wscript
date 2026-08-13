@@ -4,25 +4,12 @@
 # Flare ZYNQMP Support
 #
 
-import builditems
-
-sources = {
-    'default': [],
-    'versal': [],
-    'zynqmp': [
-        'zynqmp-boot-plan.c',
-        'zynqmp-datasafe.c',
-        'zynqmp-mmu.c',
-        'zynqmp-vectors.S',
-    ],
-    'zynq7000': []
-}
-
-includes = {'default': [], 'versal': [], 'zynqmp': ['../../'], 'zynq7000': []}
-
-defines = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
-
-cflags = {'default': [], 'versal': [], 'zynqmp': [], 'zynq7000': []}
+sources = [
+    'zynqmp-boot-plan.c',
+    'zynqmp-datasafe.c',
+    'zynqmp-mmu.c',
+    'zynqmp-vectors.S',
+]
 
 
 def init(ctx):
@@ -38,9 +25,4 @@ def configure(conf):
 
 
 def build(bld):
-    bld.objects(target='flare_zynqmp_support',
-                features='c',
-                source=builditems.get_items(bld, sources),
-                includes=builditems.get_includes(bld, includes),
-                cflags=builditems.get_cflags(bld, cflags),
-                defines=builditems.get_defines(bld, defines))
+    bld.objects(target='flare_board', features='c', source=sources)

@@ -4,13 +4,19 @@
 
 import os
 
+
+def includes(bld, paths):
+    if isinstance(paths, str):
+        paths = paths.split(' ')
+    return [str(bld.path.find_node(i)) for i in paths]
+
+
 def recurse(ctx, directories):
     for d in directories:
         ctx.recurse(d)
 
 
 def options(opt):
-    opt.add_option_group('configure options')
     copts = opt.get_option_group('configure options')
     copts.add_option('--tools-path',
                      default=None,
@@ -24,14 +30,6 @@ def options(opt):
                      default=None,
                      dest='flare_board',
                      help='Compiler prefix')
-    copts.add_option('--xsa',
-                     default=None,
-                     dest='flare_xsa',
-                     help='Path to XSA')
-    copts.add_option('--ps-init',
-                     default=None,
-                     dest='flare_ps_init',
-                     help='Path to PS initialisation file')
 
 
 def configure(conf):
@@ -42,8 +40,6 @@ def configure(conf):
     board = conf.options.flare_board
     if board == None:
         conf.fatal('No board specified')
-    else:
-        conf.env.FLARE_BOARD = board
 
     tool_path_list = []
     if conf.options.flare_tools_path == None:
@@ -54,9 +50,7 @@ def configure(conf):
         else:
             tool_path_list = conf.options.flare_tools_path
 
-    conf.find_program(tools_prefix + 'gcc',
-                      path_list=tool_path_list,
-                      var="CC")
+    conf.find_program(tools_prefix + 'gcc', path_list=tool_path_list, var="CC")
     conf.find_program(tools_prefix + 'g++',
                       path_list=tool_path_list,
                       var="CXX")
@@ -66,9 +60,7 @@ def configure(conf):
     conf.find_program(tools_prefix + 'g++',
                       path_list=tool_path_list,
                       var="LINK_CXX")
-    conf.find_program(tools_prefix + 'gcc',
-                      path_list=tool_path_list,
-                      var="AS")
+    conf.find_program(tools_prefix + 'gcc', path_list=tool_path_list, var="AS")
     conf.find_program(tools_prefix + 'ld', path_list=tool_path_list, var="LD")
     conf.find_program(tools_prefix + 'ar', path_list=tool_path_list, var="AR")
 
@@ -78,10 +70,10 @@ def configure(conf):
 
     conf.env.FLARE_TOP_DIR = str(conf.path.find_node('.'))
 
-    if conf.options.flare_xsa and not conf.options.flare_ps_init:
-        conf.env.FLARE_XSA = conf.options.flare_xsa
-    elif not conf.options.flare_xsa and conf.options.flare_ps_init:
-        conf.env.FLARE_PS_INIT = conf.options.flare_ps_init
-    else:
-        if board == 'zynqmp' or board == 'zynq7000':
-            conf.fatal("xsa OR ps init is required for this board")
+    conf.env.DEFINES += ['FLARE=1', 'FLARE_DATASAFE_FORMAT=1']
+    conf.env.INCLUDES += ['.'] + includes(conf, 'bootloader')
+    conf.env.CFLAGS_NOWARNINGS = conf.env.CFLAGS + [
+        '-ffreestanding', '-g', '-O2', '-fPIE'
+    ]
+    conf.env.CFLAGS_WARNINGS = ['-Wall', '-Wextra']
+    conf.env.CFLAGS = conf.env.CFLAGS_NOWARNINGS + conf.env.CFLAGS_WARNINGS
