@@ -20,6 +20,7 @@
 #include <flare-boot.h>
 #include <datasafe.h>
 #include <board.h>
+#include <user-break.h>
 
 #include <fs/fatfs-filesystem.h>
 
@@ -97,34 +98,12 @@ static void sdhci_boot(flare_boot_plan* bp) {
 }
 
 static void jtag_boot(flare_boot_plan* bp) {
-    const uint32_t    wait_seconds = 2;
-    volatile uint32_t seconds = 0;
-    bool              pressed = false;
+    bool pressed;
 
     printf("   JTAG boot: booting from %s in %1d   (^c for %s)"
         "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b",
-        JTAG_BOOT_PRIMARY, wait_seconds, JTAG_BOOT_SECONDARY);
-
-    while (seconds++ < wait_seconds)
-    {
-      volatile uint32_t msecs = 0;
-
-      printf("\b\b%1d ", wait_seconds - seconds + 1);
-
-      while (msecs++ < 1000)
-      {
-        if (inbyte_available())
-        {
-            uint8_t ch = inbyte();
-            if (ch == '\x3') {
-                pressed = true;
-                break;
-            }
-        }
-        usleep(1000);
-      }
-    }
-
+        JTAG_BOOT_PRIMARY, FLARE_BOOT_DELAY, JTAG_BOOT_SECONDARY);
+    pressed = user_break(FLARE_BOOT_DELAY, '\x0');
     printf("    \b\b\b\b\b\b\b\b\b\b\b\b\b\b%s                       \n",
         pressed ? JTAG_BOOT_SECONDARY : JTAG_BOOT_PRIMARY);
 

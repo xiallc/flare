@@ -181,5 +181,6 @@ factory_boot()
         platform_factory_booter(header, header_size);
     }
 
+    printf("Reset ... ");
     reset();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Contemporary Software
+ * Copyright 2026 Contemporary Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,18 @@
  */
 
 /*
- * Flare watchdog. The enable is on MIO_31 and low to disable.
+ * User break on the console.
  */
 
-#include "wdog.h"
+#if !defined(USER_BREAK_H)
+#define USER_BREAK_H
 
-#include <driver/io/board-io.h>
+#include <stdint.h>
 
-void
-wdog_init(void)
-{
-  /*
-   * Disable the SWDT.
-   */
-  board_reg_write(0xf8005000, (0xabc << 12) | 0x0);
-}
+/*
+ * Wait the number of seconds for a break. Set second_key to `\x0' to
+ * disable.
+ */
+bool user_break(size_t wair_seconds, char second_key);
 
-void
-wdog_control(bool enable)
-{
-  if (enable) {
-    board_reg_write(0xf8005000, (0xabc << 12) | 0x1);
-  } else {
-    board_reg_write(0xf8005000, (0xabc << 12) | 0x0);
-  }
-}
-
-void
-wdog_toggle (void)
-{
-  board_reg_write(0xf8005008, 0x1999);
-}
+#endif

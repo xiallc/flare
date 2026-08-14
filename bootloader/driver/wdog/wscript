@@ -12,7 +12,7 @@ board_sources = {
         'empty-wdog.c',
         'wdog-empty.c',
     ],
-    'zynq7000': ['zynq7000-wdog.c', 'wdog-flare_1.c']
+    'zynq7000': ['zynq7000-wdog.c']
 }
 
 

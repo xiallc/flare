@@ -22,6 +22,7 @@ sources = [
     'datasafe.c',
     'factory-boot.c',
     'reset.c',
+    'user-break.c',
 ]
 
 
@@ -36,16 +37,22 @@ def options(opt):
                      action='store_true',
                      help='Disable handoff for debugging')
     copts.add_option('--boot-delay',
-                     action='store_true',
-                     help='Disable handoff for debugging')
+                     type=int,
+                     dest='boot_delay',
+                     default=2,
+                     help='Set the boot delay in seconds (defaut: %(default)s)')
 
 
 def configure(conf):
     buildcontrol.recurse(conf, directories)
     if conf.options.no_handoff:
         conf.env.DEFINES += ['FLARE_HANDOFF_DISABLE=1']
+        conf.msg('Handoff', 'no')
     else:
         conf.env.DEFINES += ['FLARE_HANDOFF_DISABLE=0']
+        conf.msg('Handoff', 'yes')
+    conf.env.DEFINES += ['FLARE_BOOT_DELAY={0}'.format(conf.options.boot_delay)]
+    conf.msg('Boot delay', '{} seconds'.format(conf.options.boot_delay))
 
 
 def build(bld):

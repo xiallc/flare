@@ -35,6 +35,7 @@
 #include <fs/boot-filesystem.h>
 #include <reset.h>
 #include <sleep.h>
+#include <user-break.h>
 
 #include <driver/flash/flash.h>
 #include <driver/io/board-io.h>
@@ -49,8 +50,19 @@
 static void
 flare_boot_board_requests(void)
 {
+    bool boot_factory = false;
     if (flare_datasafe_factory_boot_requested()) {
-        printf("Factory boot requested\n");
+        boot_factory = true;
+    } else {
+        printf("   Factory boot in %2d   (^c^f)"
+               "\b\b\b\b\b\b\b\b", FLARE_BOOT_DELAY);
+        if (user_break(FLARE_BOOT_DELAY, '\x6')) {
+            boot_factory = true;
+        }
+        printf("\r                              \r");
+    }
+    if (boot_factory) {
+        printf("Factory boot ...\n");
         factory_boot();
     }
 }
@@ -73,7 +85,7 @@ int main(void) {
     board_hardware_setup();
     board_timer_reset();
 
-    printf("\nFlare FSBL (Apache 2.0 Licensed)\n");
+    printf("\n\nFlare FSBL (Apache 2.0 Licensed)\n");
     printf("    Build ID: %s\n", flare_build_id());
 
     cache_enable();
@@ -90,6 +102,7 @@ int main(void) {
     if (err == FLASH_NO_ERROR) {
         printf("       Flash: %s\n", label);
     }
+
     factory_config_load();
     flare_boot_board_requests();
 
