@@ -31,17 +31,12 @@
 #define CPU_CLK_FREQ_HZ (750000000UL)
 #define TIMER_CLK_DIV   (CPU_CLK_FREQ_HZ / (2 * 1000000ULL))
 
-void
-board_timer_get(uint64_t* time)
-{
+void board_timer_get(uint64_t* time) {
   uint32_t u = board_reg_read(ZYNQ_TIMER + ZYNQ_TMR_COUNTER_UPPER_OFFSET);
   uint32_t l = board_reg_read(ZYNQ_TIMER + ZYNQ_TMR_COUNTER_LOWER_OFFSET);
   if (board_reg_read(ZYNQ_TIMER + ZYNQ_TMR_COUNTER_UPPER_OFFSET) != u)
     l = board_reg_read(ZYNQ_TIMER + ZYNQ_TMR_COUNTER_LOWER_OFFSET);
-  *time = ((((uint64_t) u) << 32) | (uint64_t) l) / TIMER_CLK_DIV;
+  *time = ((((uint64_t)u) << 32) | (uint64_t)l) / TIMER_CLK_DIV;
 }
 
-void
-board_timer_reset(void)
-{
-}
+void board_timer_reset(void) {}

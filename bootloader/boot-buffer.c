@@ -22,12 +22,10 @@
 
 static char scratch_buffer[1024];
 
-char* flare_get_read_buffer(void)
-{
-    return scratch_buffer;
+char* flare_get_read_buffer(void) {
+  return scratch_buffer;
 }
 
-size_t flare_get_read_bufferSize(void)
-{
-    return sizeof(scratch_buffer);
+size_t flare_get_read_bufferSize(void) {
+  return sizeof(scratch_buffer);
 }

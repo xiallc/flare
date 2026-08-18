@@ -42,38 +42,38 @@
 #define ZYNQ7000_BM_SD   (0x5)
 
 int board_bootmode() {
-    uint32_t bootmode = board_reg_read(ZYNQ7000_BOOTMODE_REGISTER) & ZYNQ7000_BM_MASK;
-    if (bootmode == ZYNQ7000_BM_QSPI) {
-        return FLARE_DS_BOOTMODE_QSPI;
-    } else if (bootmode == ZYNQ7000_BM_SD) {
-        return FLARE_DS_BOOTMODE_SD_CARD;
-    } else if (bootmode == ZYNQ7000_BM_JTAG) {
-        return FLARE_DS_BOOTMODE_JTAG;
-    } else {
-        return FLARE_DS_BOOTMODE_ERROR;
-    }
+  uint32_t bootmode =
+      board_reg_read(ZYNQ7000_BOOTMODE_REGISTER) & ZYNQ7000_BM_MASK;
+  if (bootmode == ZYNQ7000_BM_QSPI) {
+    return FLARE_DS_BOOTMODE_QSPI;
+  } else if (bootmode == ZYNQ7000_BM_SD) {
+    return FLARE_DS_BOOTMODE_SD_CARD;
+  } else if (bootmode == ZYNQ7000_BM_JTAG) {
+    return FLARE_DS_BOOTMODE_JTAG;
+  } else {
+    return FLARE_DS_BOOTMODE_ERROR;
+  }
 }
 
 void flare_datasafe_hw_init(flare_datasafe* ds) {
-    uint32_t rs = board_reg_read(ZYNQ7000_REBOOT_STATUS_REGISTER);
+  uint32_t rs = board_reg_read(ZYNQ7000_REBOOT_STATUS_REGISTER);
 
-    ds->bootmode &= ~FLARE_DS_BOOTMODE_HW_MASK;
-    ds->bootmode |= board_bootmode();
+  ds->bootmode &= ~FLARE_DS_BOOTMODE_HW_MASK;
+  ds->bootmode |= board_bootmode();
 
-    ds->reset &= ~FLARE_DS_RESET_MASK;
-    if (rs & ZYNQ7000_RS_POR) {
-        ds->reset |= FLARE_DS_RESET_POR;
-    } else if (rs & ZYNQ7000_RS_SRST_B) {
-        ds->reset |= FLARE_DS_RESET_EXT;
-    } else if (rs & ZYNQ7000_RS_DBG_RST) {
-        ds->reset |= FLARE_DS_RESET_DBG;
-    } else if (rs & ZYNQ7000_RS_SLC_RST) {
-        ds->reset |= FLARE_DS_RESET_SWR;
-    } else if (rs & ZYNQ7000_RS_AWDT0_RST ||
-               rs & ZYNQ7000_RS_AWDT1_RST ||
-               rs & ZYNQ7000_RS_SWDT_RST) {
-        ds->reset |= FLARE_DS_RESET_WDT;
-    } else {
-        ds->reset |= FLARE_DS_RESET_ERR;
-    }
+  ds->reset &= ~FLARE_DS_RESET_MASK;
+  if (rs & ZYNQ7000_RS_POR) {
+    ds->reset |= FLARE_DS_RESET_POR;
+  } else if (rs & ZYNQ7000_RS_SRST_B) {
+    ds->reset |= FLARE_DS_RESET_EXT;
+  } else if (rs & ZYNQ7000_RS_DBG_RST) {
+    ds->reset |= FLARE_DS_RESET_DBG;
+  } else if (rs & ZYNQ7000_RS_SLC_RST) {
+    ds->reset |= FLARE_DS_RESET_SWR;
+  } else if (rs & ZYNQ7000_RS_AWDT0_RST || rs & ZYNQ7000_RS_AWDT1_RST ||
+             rs & ZYNQ7000_RS_SWDT_RST) {
+    ds->reset |= FLARE_DS_RESET_WDT;
+  } else {
+    ds->reset |= FLARE_DS_RESET_ERR;
+  }
 }

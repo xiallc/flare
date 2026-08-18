@@ -20,18 +20,10 @@
 
 #include "wdog.h"
 
-void
-wdog_init(void)
-{
+void wdog_init(void) {}
+
+void wdog_control(bool enable) {
+  (void)enable;
 }
 
-void
-wdog_control(bool enable)
-{
-    (void)enable;
-}
-
-void
-wdog_toggle (void)
-{
-}
+void wdog_toggle(void) {}

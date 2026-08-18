@@ -21,6 +21,6 @@
 #include "aarch64-atf.h"
 
 void aarch64_print_flare_id() {
-    printf("\nFlare FSBL (aarch64) Apache 2.0 Licensed FSBL\n");
-    printf("    Build ID: %s\n", flare_build_id());
+  printf("\nFlare FSBL (aarch64) Apache 2.0 Licensed FSBL\n");
+  printf("    Build ID: %s\n", flare_build_id());
 }

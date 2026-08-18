@@ -21,18 +21,14 @@
 #include <stdint.h>
 #include <string.h>
 
-size_t
-strlen(const char *s)
-{
+size_t strlen(const char* s) {
   size_t c = 0;
   while (*s++)
     ++c;
   return c;
 }
 
-void*
-memcpy(void *dst, const void *src, size_t len)
-{
+void* memcpy(void* dst, const void* src, size_t len) {
 #if SIZE_OVER_SPEED
   volatile uint8_t* ud = dst;
   volatile const uint8_t* us = src;
@@ -40,24 +36,23 @@ memcpy(void *dst, const void *src, size_t len)
     *ud++ = *us++;
   return dst;
 #else
-  #define UNALIGNED(X, Y) \
-    (((uintptr_t)X & (sizeof (uintptr_t) - 1)) | ((uintptr_t)Y & (sizeof (uintptr_t) - 1)))
-  #define BIGBLOCKSIZE    (sizeof (uint32_t) << 2)
-  #define LITTLEBLOCKSIZE (sizeof (uint32_t))
-  #define TOO_SMALL(LEN)  ((LEN) < BIGBLOCKSIZE)
+#define UNALIGNED(X, Y)                                                        \
+  (((uintptr_t)X & (sizeof(uintptr_t) - 1)) |                                  \
+   ((uintptr_t)Y & (sizeof(uintptr_t) - 1)))
+#define BIGBLOCKSIZE    (sizeof(uint32_t) << 2)
+#define LITTLEBLOCKSIZE (sizeof(uint32_t))
+#define TOO_SMALL(LEN)  ((LEN) < BIGBLOCKSIZE)
 
   volatile uint8_t* ud = dst;
   volatile const uint8_t* us = src;
   volatile uint32_t* ad;
   volatile const uint32_t* as;
 
-  if (!TOO_SMALL(len) && !UNALIGNED (us, ud))
-  {
-    ad = (uint32_t*) ud;
-    as = (uint32_t*) us;
+  if (!TOO_SMALL(len) && !UNALIGNED(us, ud)) {
+    ad = (uint32_t*)ud;
+    as = (uint32_t*)us;
 
-    while (len >= BIGBLOCKSIZE)
-    {
+    while (len >= BIGBLOCKSIZE) {
       *ad++ = *as++;
       *ad++ = *as++;
       *ad++ = *as++;
@@ -65,14 +60,13 @@ memcpy(void *dst, const void *src, size_t len)
       len -= BIGBLOCKSIZE;
     }
 
-    while (len >= LITTLEBLOCKSIZE)
-    {
+    while (len >= LITTLEBLOCKSIZE) {
       *ad++ = *as++;
       len -= LITTLEBLOCKSIZE;
     }
 
-    ud = (uint8_t*) ad;
-    us = (uint8_t*) as;
+    ud = (uint8_t*)ad;
+    us = (uint8_t*)as;
   }
 
   while (len--)
@@ -82,38 +76,29 @@ memcpy(void *dst, const void *src, size_t len)
 #endif
 }
 
-void*
-memmove(void *dst, const void *src, size_t len)
-{
+void* memmove(void* dst, const void* src, size_t len) {
   volatile uint8_t* ud = dst;
   volatile const uint8_t* us = src;
-  if ((us < ud) && (ud < (us + len)))
-  {
+  if ((us < ud) && (ud < (us + len))) {
     us += len;
     ud += len;
     while (len--)
       *--ud = *--us;
-  }
-  else
-  {
+  } else {
     while (len--)
       *ud++ = *us++;
   }
   return dst;
 }
 
-void*
-memset(void *dst, int c, size_t len)
-{
+void* memset(void* dst, int c, size_t len) {
   volatile uint8_t* ud = dst;
   while (len--)
     *ud++ = c;
   return dst;
 }
 
-int
-memcmp(const void *b1, const void *b2, size_t len)
-{
+int memcmp(const void* b1, const void* b2, size_t len) {
   const volatile uint8_t* ub1 = b1;
   const volatile uint8_t* ub2 = b2;
   while (len--) {

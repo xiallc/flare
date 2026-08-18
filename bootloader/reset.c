@@ -25,11 +25,10 @@
 #include <driver/slcr/board-slcr.h>
 #include <driver/wdog/wdog.h>
 
-void
-reset(void)
-{
-    cache_disable();
-    board_slcr_lock();
-    wdog_control(true);
-    while (true);
+void reset(void) {
+  cache_disable();
+  board_slcr_lock();
+  wdog_control(true);
+  while (true)
+    ;
 }

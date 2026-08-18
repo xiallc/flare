@@ -26,62 +26,54 @@
 #include <driver/slcr/board-slcr.h>
 #include <driver/wdog/wdog.h>
 
-
-#define ZYNQ_ARM_SWITCH_REGISTERS         uint32_t arm_switch_reg
-#define ZYNQ_ARM_SWITCH_TO_ARM            ".align 2\nbx pc\n.arm\n"
-#define ZYNQ_ARM_SWITCH_BACK              "add %[arm_switch_reg], pc, #1\nbx %[arm_switch_reg]\n.thumb\n"
-#define ZYNQ_ARM_SWITCH_OUTPUT            [arm_switch_reg] "=&r" (arm_switch_reg)
+#define ZYNQ_ARM_SWITCH_REGISTERS uint32_t arm_switch_reg
+#define ZYNQ_ARM_SWITCH_TO_ARM    ".align 2\nbx pc\n.arm\n"
+#define ZYNQ_ARM_SWITCH_BACK                                                   \
+  "add %[arm_switch_reg], pc, #1\nbx %[arm_switch_reg]\n.thumb\n"
+#define ZYNQ_ARM_SWITCH_OUTPUT            [arm_switch_reg] "=&r"(arm_switch_reg)
 #define ZYNQ_ARM_SWITCH_ADDITIONAL_OUTPUT ZYNQ_ARM_SWITCH_OUTPUT
 
 #undef ASM_ARM_MODE
 #define ASM_ARM_MODE ".align 2\nbx pc\n.arm\n"
 
-static inline void
-zynq_clear_caches(void)
-{
+static inline void zynq_clear_caches(void) {
   ZYNQ_ARM_SWITCH_REGISTERS;
   uint32_t sbz = 0;
-  asm volatile(ZYNQ_ARM_SWITCH_TO_ARM
-               "mcr p15, 0, %[sbz], cr7, cr5, 0\n"  /* Invalidate Instruction cache */
-               "mcr p15, 0, %[sbz], cr7, cr5, 6\n"  /* Invalidate branch predictor array */
-               "dsb\n"
-               "isb\n"
-               ZYNQ_ARM_SWITCH_BACK
-               : ZYNQ_ARM_SWITCH_ADDITIONAL_OUTPUT
-               : [sbz] "r" (sbz)
-               : "memory");
+  asm volatile(
+      ZYNQ_ARM_SWITCH_TO_ARM
+      "mcr p15, 0, %[sbz], cr7, cr5, 0\n" /* Invalidate Instruction cache */
+      "mcr p15, 0, %[sbz], cr7, cr5, 6\n" /* Invalidate branch predictor array
+                                           */
+      "dsb\n"
+      "isb\n" ZYNQ_ARM_SWITCH_BACK
+      : ZYNQ_ARM_SWITCH_ADDITIONAL_OUTPUT
+      : [sbz] "r"(sbz)
+      : "memory");
 }
 
-static inline void
-zynq_reset_mmu(void)
-{
+static inline void zynq_reset_mmu(void) {
   ZYNQ_ARM_SWITCH_REGISTERS;
   uint32_t sbz = 0;
-  asm volatile(ZYNQ_ARM_SWITCH_TO_ARM
-               "mcr	p15, 0, %[sbz], cr1, cr0, 0\n" /* disable the ICache and MMU */
-               "isb\n"                             /* make sure it completes */
-               ZYNQ_ARM_SWITCH_BACK
-               : ZYNQ_ARM_SWITCH_ADDITIONAL_OUTPUT
-               : [sbz] "r" (sbz)
-               : "memory");
+  asm volatile(
+      ZYNQ_ARM_SWITCH_TO_ARM
+      "mcr	p15, 0, %[sbz], cr1, cr0, 0\n" /* disable the ICache and MMU */
+      "isb\n"                                  /* make sure it completes */
+      ZYNQ_ARM_SWITCH_BACK
+      : ZYNQ_ARM_SWITCH_ADDITIONAL_OUTPUT
+      : [sbz] "r"(sbz)
+      : "memory");
 }
 
-static inline void
-zynq_dispatch(uint32_t address)
-{
+static inline void zynq_dispatch(uint32_t address) {
   ZYNQ_ARM_SWITCH_REGISTERS;
-  asm volatile(ZYNQ_ARM_SWITCH_TO_ARM
-               "mov lr, %[address]\n"
-               "bx  lr\n"
-               ZYNQ_ARM_SWITCH_BACK
+  asm volatile(ZYNQ_ARM_SWITCH_TO_ARM "mov lr, %[address]\n"
+                                      "bx  lr\n" ZYNQ_ARM_SWITCH_BACK
                : ZYNQ_ARM_SWITCH_ADDITIONAL_OUTPUT
-               : [address] "r" (address)
+               : [address] "r"(address)
                : "lr", "memory");
 }
 
-void
-board_handoff_exit(uint32_t address)
-{
+void board_handoff_exit(uint32_t address) {
   printf("Flare handing off to 0x%08x\n", address);
   board_handoff_disable();
   board_slcr_lock();
@@ -90,12 +82,11 @@ board_handoff_exit(uint32_t address)
   zynq_reset_mmu();
   zynq_dispatch(address);
   wdog_control(true);
-  while (true);
+  while (true)
+    ;
 }
 
-void
-board_handoff_exit_no_mmu_reset(uint32_t address)
-{
+void board_handoff_exit_no_mmu_reset(uint32_t address) {
   printf("Flare handing off to 0x%08x\n", address);
   board_handoff_disable();
   board_slcr_lock();
@@ -103,12 +94,11 @@ board_handoff_exit_no_mmu_reset(uint32_t address)
   cache_disable();
   zynq_dispatch(address);
   wdog_control(true);
-  while (true);
+  while (true)
+    ;
 }
 
-void
-board_handoff_jtag_exit(void)
-{
+void board_handoff_jtag_exit(void) {
   board_handoff_disable();
   board_slcr_lock();
   zynq_clear_caches();

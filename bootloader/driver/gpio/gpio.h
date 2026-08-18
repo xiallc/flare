@@ -21,8 +21,8 @@
 #if !defined(_GPIO_H_)
 #define _GPIO_H_
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,37 +36,34 @@ extern "C" {
 /*
  * Voltages.
  */
-typedef enum
-{
-    gpio_LVCMOS18,
-    gpio_LVCMOS25,
-    gpio_LVCMOS33,
-    gpio_HSTL
+typedef enum {
+  gpio_LVCMOS18,
+  gpio_LVCMOS25,
+  gpio_LVCMOS33,
+  gpio_HSTL
 } gpio_pin_volts;
 
 /*
  * Pin definition.
  */
-typedef struct
-{
-    int            pin;       /* The pin number. */
-    bool           output;    /* True for output, false for input. */
-    bool           on;        /* True default output is on */
-    bool           outen;     /* True for output enable on, false for off. */
-    gpio_pin_volts volts;     /* The voltage level. */
-    bool           pullup;    /* True to enable the pull up. */
-    bool           fast;      /* True to be a fast CMOS edge */
-    bool           tristate;  /* True to enable tri-state. */
+typedef struct {
+  int pin;              /* The pin number. */
+  bool output;          /* True for output, false for input. */
+  bool on;              /* True default output is on */
+  bool outen;           /* True for output enable on, false for off. */
+  gpio_pin_volts volts; /* The voltage level. */
+  bool pullup;          /* True to enable the pull up. */
+  bool fast;            /* True to be a fast CMOS edge */
+  bool tristate;        /* True to enable tri-state. */
 } gpio_pin_def;
 
 /*
  * Error codes.
  */
-typedef enum
-{
-    GPIO_NO_ERROR = 0,
-    GPIO_INVALID_PIN,
-    GPIO_INVALID_VOLTAGE
+typedef enum {
+  GPIO_NO_ERROR = 0,
+  GPIO_INVALID_PIN,
+  GPIO_INVALID_VOLTAGE
 } gpio_error;
 
 gpio_error gpio_setup_pin(const gpio_pin_def* pin);

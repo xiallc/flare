@@ -16,10 +16,10 @@
 
 #include <stdio.h>
 
-#include <sleep.h>
-#include <flare-boot.h>
-#include <datasafe.h>
 #include <board.h>
+#include <datasafe.h>
+#include <flare-boot.h>
+#include <sleep.h>
 
 #include <fs/fatfs-filesystem.h>
 
@@ -28,123 +28,120 @@
 
 #define JTAG_BOOT_DEFAULT FLARE_DS_BOOTMODE_EMMC
 #if JTAG_BOOT_DEFAULT == FLARE_DS_BOOTMODE_EMMC
-  #define JTAG_BOOT_PRIMARY   "EMMC"
-  #define JTAG_BOOT_SECONDARY "SD  "
+#define JTAG_BOOT_PRIMARY   "EMMC"
+#define JTAG_BOOT_SECONDARY "SD  "
 #else
-  #define JTAG_BOOT_PRIMARY   "SD  "
-  #define JTAG_BOOT_SECONDARY "EMMC"
+#define JTAG_BOOT_PRIMARY   "SD  "
+#define JTAG_BOOT_SECONDARY "EMMC"
 #endif
 
 static int open_emmc() {
-    return sdhci_open(SDHCI_CTLR_EMMC);
+  return sdhci_open(SDHCI_CTLR_EMMC);
 }
 
 static int mount_emmc_fatfs() {
-    return flare_filesystem_mount(FILESYSTEM_EMMC_FATFS);
+  return flare_filesystem_mount(FILESYSTEM_EMMC_FATFS);
 }
 
 static int open_sd() {
-    return sdhci_open(SDHCI_CTLR_SD);
+  return sdhci_open(SDHCI_CTLR_SD);
 }
 
 static int mount_sd_fatfs() {
-    return flare_filesystem_mount(FILESYSTEM_SD_FATFS);
+  return flare_filesystem_mount(FILESYSTEM_SD_FATFS);
 }
 
 static void emmc_boot(flare_boot_plan* bp) {
-    bp->opens[0] = &open_emmc;
-    bp->opens_name[0] = "EMMC";
+  bp->opens[0] = &open_emmc;
+  bp->opens_name[0] = "EMMC";
 
-    for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++ ) {
-        bp->opens[i] = NULL;
-        bp->opens_name[i] = NULL;
-    }
+  for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++) {
+    bp->opens[i] = NULL;
+    bp->opens_name[i] = NULL;
+  }
 
-    bp->mounts[0] = &mount_emmc_fatfs;
-    bp->mounts_name[0] = "FATFS";
+  bp->mounts[0] = &mount_emmc_fatfs;
+  bp->mounts_name[0] = "FATFS";
 
-    for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++ ) {
-        bp->mounts[i] = NULL;
-        bp->mounts_name[i] = NULL;
-    }
+  for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++) {
+    bp->mounts[i] = NULL;
+    bp->mounts_name[i] = NULL;
+  }
 
-    bp->boot_fs = FILESYSTEM_EMMC_FATFS;
-    bp->bs_name = "flare-0";
+  bp->boot_fs = FILESYSTEM_EMMC_FATFS;
+  bp->bs_name = "flare-0";
 }
 
 static void sdhci_boot(flare_boot_plan* bp) {
-    bp->opens[0] = &open_sd;
-    bp->opens_name[0] = "SD";
+  bp->opens[0] = &open_sd;
+  bp->opens_name[0] = "SD";
 
-    for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++ ) {
-        bp->opens[i] = NULL;
-        bp->opens_name[i] = NULL;
-    }
+  for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++) {
+    bp->opens[i] = NULL;
+    bp->opens_name[i] = NULL;
+  }
 
-    bp->mounts[0] = &mount_sd_fatfs;
-    bp->mounts_name[0] = "FATFS";
+  bp->mounts[0] = &mount_sd_fatfs;
+  bp->mounts_name[0] = "FATFS";
 
-    for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++ ) {
-        bp->mounts[i] = NULL;
-        bp->mounts_name[i] = NULL;
-    }
+  for (int i = 1; i < FLARE_STAGE_FUNC_MAX; i++) {
+    bp->mounts[i] = NULL;
+    bp->mounts_name[i] = NULL;
+  }
 
-    bp->boot_fs = FILESYSTEM_SD_FATFS;
-    bp->bs_name = "flare-0";
+  bp->boot_fs = FILESYSTEM_SD_FATFS;
+  bp->bs_name = "flare-0";
 }
 
 static void jtag_boot(flare_boot_plan* bp) {
-    const uint32_t    wait_seconds = 2;
-    volatile uint32_t seconds = 0;
-    bool              pressed = false;
+  const uint32_t wait_seconds = 2;
+  volatile uint32_t seconds = 0;
+  bool pressed = false;
 
-    printf("   JTAG boot: booting from %s in %1d   (^c for %s)"
-        "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b",
-        JTAG_BOOT_PRIMARY, wait_seconds, JTAG_BOOT_SECONDARY);
+  printf("   JTAG boot: booting from %s in %1d   (^c for %s)"
+         "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b",
+         JTAG_BOOT_PRIMARY, wait_seconds, JTAG_BOOT_SECONDARY);
 
-    while (seconds++ < wait_seconds)
-    {
-      volatile uint32_t msecs = 0;
+  while (seconds++ < wait_seconds) {
+    volatile uint32_t msecs = 0;
 
-      printf("\b\b%1d ", wait_seconds - seconds + 1);
+    printf("\b\b%1d ", wait_seconds - seconds + 1);
 
-      while (msecs++ < 1000)
-      {
-        if (inbyte_available())
-        {
-            uint8_t ch = inbyte();
-            if (ch == '\x3') {
-                pressed = true;
-                break;
-            }
+    while (msecs++ < 1000) {
+      if (inbyte_available()) {
+        uint8_t ch = inbyte();
+        if (ch == '\x3') {
+          pressed = true;
+          break;
         }
-        usleep(1000);
       }
+      usleep(1000);
     }
+  }
 
-    printf("    \b\b\b\b\b\b\b\b\b\b\b\b\b\b%s                       \n",
-        pressed ? JTAG_BOOT_SECONDARY : JTAG_BOOT_PRIMARY);
+  printf("    \b\b\b\b\b\b\b\b\b\b\b\b\b\b%s                       \n",
+         pressed ? JTAG_BOOT_SECONDARY : JTAG_BOOT_PRIMARY);
 
-    if ((pressed && JTAG_BOOT_DEFAULT != FLARE_DS_BOOTMODE_EMMC) ||
-        (!pressed && JTAG_BOOT_DEFAULT == FLARE_DS_BOOTMODE_EMMC)) {
-        flare_datasafe_set_bootmode(FLARE_DS_BOOTMODE_JTAG |
+  if ((pressed && JTAG_BOOT_DEFAULT != FLARE_DS_BOOTMODE_EMMC) ||
+      (!pressed && JTAG_BOOT_DEFAULT == FLARE_DS_BOOTMODE_EMMC)) {
+    flare_datasafe_set_bootmode(FLARE_DS_BOOTMODE_JTAG |
                                 FLARE_DS_BOOTMODE_EMMC);
-        emmc_boot(bp);
-    } else {
-        flare_datasafe_set_bootmode(FLARE_DS_BOOTMODE_JTAG |
+    emmc_boot(bp);
+  } else {
+    flare_datasafe_set_bootmode(FLARE_DS_BOOTMODE_JTAG |
                                 FLARE_DS_BOOTMODE_SD_CARD);
-        sdhci_boot(bp);
-    }
+    sdhci_boot(bp);
+  }
 }
 
 void flare_get_boot_plan(flare_boot_plan* bp) {
-    uint32_t bootmode = board_bootmode();
+  uint32_t bootmode = board_bootmode();
 
-    if (bootmode == FLARE_DS_BOOTMODE_QSPI) {
-        emmc_boot(bp);
-    } else if (bootmode == FLARE_DS_BOOTMODE_SD_CARD) {
-        sdhci_boot(bp);
-    } else if (bootmode == FLARE_DS_BOOTMODE_JTAG) {
-        jtag_boot(bp);
-    }
+  if (bootmode == FLARE_DS_BOOTMODE_QSPI) {
+    emmc_boot(bp);
+  } else if (bootmode == FLARE_DS_BOOTMODE_SD_CARD) {
+    sdhci_boot(bp);
+  } else if (bootmode == FLARE_DS_BOOTMODE_JTAG) {
+    jtag_boot(bp);
+  }
 }

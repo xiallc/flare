@@ -30,27 +30,26 @@
 /*
  * PS reset control register define
  */
-#define PS_RST_MASK         0x00000001 /**< PS software reset */
+#define PS_RST_MASK 0x00000001 /**< PS software reset */
 
 /*
  * SLCR BOOT Mode Register defines
  */
-#define BOOT_MODES_MASK     0x0000000F /**< FLASH types */
+#define BOOT_MODES_MASK 0x0000000F /**< FLASH types */
 
 /*
  * Boot Modes
  */
-#define JTAG_MODE           0x00000000 /**< JTAG Boot Mode */
-#define QSPI_MODE           0x00000002 /**< QSPI32 Boot Mode */
-#define SD_MODE             0x00000005 /**< SD Boot Mode */
-#define MMC_MODE            0x00000006 /**< eMMC 4.51 1.8v Boot Device */
-
+#define JTAG_MODE 0x00000000 /**< JTAG Boot Mode */
+#define QSPI_MODE 0x00000002 /**< QSPI32 Boot Mode */
+#define SD_MODE   0x00000005 /**< SD Boot Mode */
+#define MMC_MODE  0x00000006 /**< eMMC 4.51 1.8v Boot Device */
 
 /*
  * Register Addresses
  */
 
-#define BOOT_MODE_REG       (0xff5e0200)
-#define RESET_REASON_REG    (0xff5e0220)
+#define BOOT_MODE_REG    (0xff5e0200)
+#define RESET_REASON_REG (0xff5e0220)
 
 #endif /* ZYNQMP_H */

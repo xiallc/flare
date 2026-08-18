@@ -19,9 +19,9 @@
 #include <board-handoff.h>
 
 void board_handoff_disable(void) {
-    if (FLARE_HANDOFF_DISABLE) {
-        printf("\nHand off disabled. Looping ... ");
-        while (true) {
-        }
+  if (FLARE_HANDOFF_DISABLE) {
+    printf("\nHand off disabled. Looping ... ");
+    while (true) {
     }
+  }
 }

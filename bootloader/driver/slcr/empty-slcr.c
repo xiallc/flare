@@ -20,12 +20,6 @@
 
 #include "board-slcr.h"
 
-void
-board_slcr_unlock(void)
-{
-}
+void board_slcr_unlock(void) {}
 
-void
-board_slcr_lock(void)
-{
-}
+void board_slcr_lock(void) {}

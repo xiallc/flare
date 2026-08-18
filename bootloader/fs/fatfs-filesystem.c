@@ -26,39 +26,39 @@
 FATFS fs;
 
 int fatfs_filesystem_mount() {
-    FRESULT res;
-    res = f_mount(&fs, "", 0);
-    if (res != FR_OK) {
-        return res;
-    }
-    return 0;
+  FRESULT res;
+  res = f_mount(&fs, "", 0);
+  if (res != FR_OK) {
+    return res;
+  }
+  return 0;
 }
 
 int fatfs_read_file(const char* name, void* const buffer, uint32_t* size) {
-    FIL file;
-    FRESULT fr;
-    uint32_t len = *size;
+  FIL file;
+  FRESULT fr;
+  uint32_t len = *size;
 
-    fr = f_open(&file, name, FA_READ);
-    if (fr != FR_OK) {
-        return fr;
-    }
+  fr = f_open(&file, name, FA_READ);
+  if (fr != FR_OK) {
+    return fr;
+  }
 
-    fr = f_read(&file, buffer, len, size);
-    if (fr != FR_OK) {
-        return fr;
-    }
+  fr = f_read(&file, buffer, len, size);
+  if (fr != FR_OK) {
+    return fr;
+  }
 
-    f_close(&file);
-    return 0;
+  f_close(&file);
+  return 0;
 }
 
 int fatfs_chdir(const char* path) {
-    FRESULT fr;
+  FRESULT fr;
 
-    fr = f_chdir(path);
-    if (fr != FR_OK) {
-        return fr;
-    }
-    return 0;
+  fr = f_chdir(path);
+  if (fr != FR_OK) {
+    return fr;
+  }
+  return 0;
 }

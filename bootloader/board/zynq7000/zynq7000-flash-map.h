@@ -30,23 +30,24 @@ extern "C" {
 /**
  * Flash memory map.
  */
-#define FLARE_FLASH_SIZE             flash_device_size()
-#define FLARE_FLASH_BLOCK_SIZE       flash_device_sector_erase_size()
+#define FLARE_FLASH_SIZE       flash_device_size()
+#define FLARE_FLASH_BLOCK_SIZE flash_device_sector_erase_size()
 
-#define FLARE_FLASH_BOOT_BASE        (0UL)
-#define FLARE_FLASH_BOOT_SIZE        (6UL * 1024 * 1024)
-#define FLARE_FLASH_FACTORY_BASE     (FLARE_FLASH_SIZE - FLARE_FLASH_FACTORY_SIZE)
-#define FLARE_FLASH_FACTORY_SIZE     (FLARE_FLASH_BLOCK_SIZE)
-#define FLARE_FLASH_FILESYSTEM_BASE  (FLARE_FLASH_BOOT_BASE + FLARE_FLASH_BOOT_SIZE)
-#define FLARE_FLASH_FILESYSTEM_SIZE  (FLARE_FLASH_FACTORY_BASE - \
-                                        (FLARE_FLASH_BOOT_BASE + FLARE_FLASH_BOOT_SIZE))
+#define FLARE_FLASH_BOOT_BASE    (0UL)
+#define FLARE_FLASH_BOOT_SIZE    (6UL * 1024 * 1024)
+#define FLARE_FLASH_FACTORY_BASE (FLARE_FLASH_SIZE - FLARE_FLASH_FACTORY_SIZE)
+#define FLARE_FLASH_FACTORY_SIZE (FLARE_FLASH_BLOCK_SIZE)
+#define FLARE_FLASH_FILESYSTEM_BASE                                            \
+  (FLARE_FLASH_BOOT_BASE + FLARE_FLASH_BOOT_SIZE)
+#define FLARE_FLASH_FILESYSTEM_SIZE                                            \
+  (FLARE_FLASH_FACTORY_BASE - (FLARE_FLASH_BOOT_BASE + FLARE_FLASH_BOOT_SIZE))
 
 /*
  * Factory flash partition.
  */
-#define FLARE_FLASH_BOOT_BIN_SIZE    (1UL * 1024 * 1024)
-#define FLARE_FLASH_EXE_BASE         (FLARE_FLASH_BOOT_BIN_SIZE)
-#define FLARE_FLASH_EXE_SIZE         (FLARE_FLASH_BOOT_SIZE - FLARE_FLASH_EXE_BASE)
+#define FLARE_FLASH_BOOT_BIN_SIZE (1UL * 1024 * 1024)
+#define FLARE_FLASH_EXE_BASE      (FLARE_FLASH_BOOT_BIN_SIZE)
+#define FLARE_FLASH_EXE_SIZE      (FLARE_FLASH_BOOT_SIZE - FLARE_FLASH_EXE_BASE)
 
 #ifdef __cplusplus
 }

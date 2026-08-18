@@ -21,17 +21,15 @@
 #include "zynqmp-sdhci.h"
 
 uint32_t sdhci_address(int ctlr) {
-    if (ctlr == SDHCI_CTLR_EMMC) {
-        return SDHCI0_REG_BASE;
-    } else if (ctlr == SDHCI_CTLR_SD) {
-        return SDHCI1_REG_BASE;
-    }
-    printf("sdhci (%d): controller not supported\n", ctlr);
-    return 0;
+  if (ctlr == SDHCI_CTLR_EMMC) {
+    return SDHCI0_REG_BASE;
+  } else if (ctlr == SDHCI_CTLR_SD) {
+    return SDHCI1_REG_BASE;
+  }
+  printf("sdhci (%d): controller not supported\n", ctlr);
+  return 0;
 }
 
-void disable_bus_power(int ) {
-}
+void disable_bus_power(int) {}
 
-void enable_bus_power(int ) {
-}
+void enable_bus_power(int) {}

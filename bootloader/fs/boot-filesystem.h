@@ -26,9 +26,9 @@
 #include <stdint.h>
 
 typedef enum {
-    FILESYSTEM_QSPI_JFFS2,
-    FILESYSTEM_SD_FATFS,
-    FILESYSTEM_EMMC_FATFS,
+  FILESYSTEM_QSPI_JFFS2,
+  FILESYSTEM_SD_FATFS,
+  FILESYSTEM_EMMC_FATFS,
 } flare_fs;
 
 /*
@@ -39,8 +39,8 @@ int flare_filesystem_mount(flare_fs fs);
 /*
  * Read the file.
  */
-int flare_read_file(
-    flare_fs fs, const char* name, void* const buffer, uint32_t* size);
+int flare_read_file(flare_fs fs, const char* name, void* const buffer,
+                    uint32_t* size);
 
 /*
  * Change directory.
