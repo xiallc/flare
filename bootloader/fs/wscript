@@ -4,6 +4,8 @@
 # Flare Bootloader Filesystems
 #
 
+import buildcontrol
+
 sources = [
     'boot-filesystem.c',
     'jffs2-filesystem.c',
@@ -25,3 +27,10 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_fs', features='c', source=sources)
+
+
+def format(bld):
+    srcs = sources + [
+        'boot-filesystem.h', 'fatfs-filesystem.h', 'jffs2-filesystem.h'
+    ]
+    buildcontrol.format(bld, srcs)

@@ -4,6 +4,8 @@
 # Flare FATFS Driver
 #
 
+import buildcontrol
+
 sources = [
     'ff.c',
     'ffsystem.c',
@@ -29,3 +31,8 @@ def build(bld):
                 features='c',
                 source=sources,
                 includes=['.'])
+
+
+def format(bld):
+    srcs = ['sdwrapper.c', 'sdwrapper.h']
+    buildcontrol.format(bld, srcs)

@@ -4,6 +4,8 @@
 # Flare PM Driver
 #
 
+import buildcontrol
+
 sources = []
 
 board_sources = {
@@ -34,3 +36,8 @@ def build(bld):
     if bld.env.FLARE_BOARD in board_sources:
         srcs += board_sources[bld.env.FLARE_BOARD]
     bld.objects(target='flare_pm_driver', features='c', source=srcs)
+
+
+def format(bld):
+    srcs = sources + buildcontrol.board_source(bld, board_sources, True)
+    buildcontrol.format(bld, srcs)

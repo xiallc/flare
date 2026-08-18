@@ -28,3 +28,7 @@ def build(bld):
                 features='c',
                 source=sources,
                 use=['flare_xilinx'])
+
+
+def format(bld):
+    pass

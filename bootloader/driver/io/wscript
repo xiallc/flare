@@ -4,6 +4,8 @@
 # Flare IO Driver
 #
 
+import buildcontrol
+
 
 def init(ctx):
     pass
@@ -19,3 +21,7 @@ def configure(conf):
 
 def build(bld):
     pass
+
+
+def format(bld):
+    buildcontrol.format(bld, ['board-io.h'])

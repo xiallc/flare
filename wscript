@@ -8,11 +8,20 @@ import buildcontrol
 import buildver
 import xilinx
 
+from waflib import Context, Build, Errors, Logs, Scripting, Task, TaskGen, Utils
+
 directories = ['bootloader']
 
 sources = [
     'bootloader/fsbl-boot.c',
 ]
+
+
+@TaskGen.feature('format')
+class formatter(Build.BuildContext):
+    '''format thesources'''
+    cmd = 'format'
+    fun = 'format'
 
 
 def init(ctx):
@@ -45,3 +54,14 @@ def build(bld):
                 source=sources,
                 use=['flare', 'flare_drivers', 'flare_version'],
                 install_path='${PREFIX}/share/flare/${FLARE_BOARD}')
+
+
+def format(bld):
+    if 'C_FORMATTER' not in bld.env and 'PY_FORMATTER' not in bld.env:
+        bld.fatal(
+            'no formatters found; reconfigure with --formatter for C or install one'
+        )
+    buildcontrol.recurse(bld, directories)
+    buildcontrol.format(bld, bld.path.ant_glob('*.py', dir=False, src=True))
+    buildcontrol.format(bld,
+                        bld.path.ant_glob('**/wscript', dir=False, src=True))

@@ -26,3 +26,7 @@ def configure(conf):
 
 def build(bld):
     buildcontrol.recurse(bld, [bld.env.FLARE_ARCH])
+
+
+def format(bld):
+    buildcontrol.recurse(bld, directories)

@@ -4,6 +4,8 @@
 # Flare Baremetal Libc Driver
 #
 
+import buildcontrol
+
 sources = [
     'libc.c',
     'printf.c',
@@ -24,3 +26,7 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_libc_driver', features='c', source=sources)
+
+
+def format(bld):
+    buildcontrol.format(bld, sources)

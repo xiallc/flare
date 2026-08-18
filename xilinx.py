@@ -82,7 +82,7 @@ def configure(conf):
             conf.msg('Vivado XSA', conf.env.FLARE_XSA)
         elif conf.options.flare_ps_init:
             conf.env.FLARE_PS_INIT = conf.options.flare_ps_init
-            conf.msg('Vivado PS Init', conf.env.FLARE_PS_INIT_SRC)
+            conf.msg('Vivado PS Init', conf.env.FLARE_PS_INIT)
         else:
             conf.fatal("Vivado XSA OR ps7_init is required for this board")
         conf.env.FLARE_BOARD = board

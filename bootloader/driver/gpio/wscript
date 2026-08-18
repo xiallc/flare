@@ -4,6 +4,8 @@
 # Flare GPIO Driver
 #
 
+import buildcontrol
+
 sources = [
     'gpio.c',
 ]
@@ -23,3 +25,8 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_gpio_driver', features='c', source=sources)
+
+
+def format(bld):
+    srcs = sources + ['gpio.h']
+    buildcontrol.format(bld, srcs)

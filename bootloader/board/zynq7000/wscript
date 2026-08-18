@@ -4,6 +4,8 @@
 # Flare ZYNQ7000 Support
 #
 
+import buildcontrol
+
 sources = [
     'zynq7000-begin-lo.S',
     'zynq7000-boot-plan.c',
@@ -30,3 +32,8 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_board', features='c', source=sources)
+
+
+def format(bld):
+    srcs = sources + ['zynq7000.h', 'zynq7000-flash-map.h']
+    buildcontrol.format(bld, srcs)

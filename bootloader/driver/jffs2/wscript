@@ -4,6 +4,8 @@
 # Flare JFFS2 Driver
 #
 
+import buildcontrol
+
 sources = ['jffs2-boot.c', 'libcrc32.c']
 
 
@@ -21,3 +23,8 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_jffs2_driver', features='c', source=sources)
+
+
+def format(bld):
+    srcs = ['jffs2-boot.c', 'jffs2-boot.h']
+    buildcontrol.format(bld, srcs)

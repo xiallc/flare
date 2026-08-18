@@ -4,6 +4,8 @@
 # Flare AARCH64 Support
 #
 
+import buildcontrol
+
 sources = [
     'aarch64-atf.c',
     'aarch64-cache.c',
@@ -30,3 +32,9 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_arch', features='c', source=sources)
+
+
+def format(bld):
+    srcs = sources
+    srcs.remove('mmu/aarch64-cache.c')
+    buildcontrol.format(bld, srcs)

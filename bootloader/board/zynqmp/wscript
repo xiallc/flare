@@ -4,6 +4,8 @@
 # Flare ZYNQMP Support
 #
 
+import buildcontrol
+
 sources = [
     'zynqmp-boot-plan.c',
     'zynqmp-datasafe.c',
@@ -26,3 +28,9 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_board', features='c', source=sources)
+
+
+def format(bld):
+    srcs = sources + ['zynqmp.h', 'zynqmp-flash-map.h']
+    srcs.remove('zynqmp-mmu.c')
+    buildcontrol.format(bld, srcs)

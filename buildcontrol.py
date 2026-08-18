@@ -16,6 +16,46 @@ def recurse(ctx, directories):
         ctx.recurse(d)
 
 
+def board_source(bld, board_sources, all=False):
+    srcs = []
+    if all:
+        for b in board_sources:
+            srcs += board_sources[b]
+    else:
+        if bld.env.FLARE_BOARD in board_sources:
+            srcs += board_sources[bld.env.FLARE_BOARD]
+    return list(set(srcs))
+
+
+def format(bld, sources):
+    if sources:
+
+        def run_c(task):
+            task.color = 'PINK'
+            srcs = ' '.join([i.abspath() for i in task.inputs])
+            cmd = task.env.C_FORMATTER[0] + ' -i ' + srcs
+            return task.exec_command(cmd)
+
+        def run_py(task):
+            task.color = 'YELLOW'
+            srcs = ' '.join([i.abspath() for i in task.inputs])
+            cmd = task.env.PY_FORMATTER[0] + ' -i ' + srcs
+            return task.exec_command(cmd)
+
+        c_sources = [s for s in sources if str(s).endswith(('.c', '.h'))]
+        if c_sources:
+            bld(rule=run_c, source=c_sources, always=True, name='format c')
+
+        py_sources = [
+            s for s in sources if str(s).endswith(('.py', 'wscript'))
+        ]
+        if py_sources:
+            bld(rule=run_py,
+                source=py_sources,
+                always=True,
+                name='format python')
+
+
 def options(opt):
     copts = opt.get_option_group('configure options')
     copts.add_option('--tools-path',
@@ -30,6 +70,10 @@ def options(opt):
                      default=None,
                      dest='flare_board',
                      help='Compiler prefix')
+    copts.add_option('--formatter',
+                     default='clang-format',
+                     dest='formatter',
+                     help='Clang format command (default: %(default)s)')
 
 
 def configure(conf):
@@ -77,3 +121,8 @@ def configure(conf):
     ]
     conf.env.CFLAGS_WARNINGS = ['-Wall', '-Wextra']
     conf.env.CFLAGS = conf.env.CFLAGS_NOWARNINGS + conf.env.CFLAGS_WARNINGS
+
+    conf.find_program(conf.options.formatter,
+                      var='C_FORMATTER',
+                      mandatory=False)
+    conf.find_program('yapf', var='PY_FORMATTER', mandatory=False)

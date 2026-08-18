@@ -4,6 +4,8 @@
 # Flare zlib Driver
 #
 
+import buildcontrol
+
 sources = ['tzlib.c']
 
 
@@ -21,3 +23,8 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_zlib_driver', features='c', source=sources)
+
+
+def format(bld):
+    srcs = sources + ['tzlib.c']
+    buildcontrol.format(bld, srcs)

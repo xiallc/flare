@@ -23,3 +23,7 @@ def configure(conf):
 
 def build(bld):
     bld.objects(target='flare_md5_driver', features='c', source=sources)
+
+
+def format(bld):
+    pass

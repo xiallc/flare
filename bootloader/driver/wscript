@@ -65,3 +65,7 @@ def build(bld):
                   'flare_xpartition_driver',
                   'flare_zlib_driver',
               ])
+
+
+def format(bld):
+    buildcontrol.recurse(bld, directories)

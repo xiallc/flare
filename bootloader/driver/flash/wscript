@@ -4,6 +4,8 @@
 # Flare Flash Driver
 #
 
+import buildcontrol
+
 sources = [
     'flash.c',
 ]
@@ -34,7 +36,10 @@ def configure(conf):
 
 
 def build(bld):
-    srcs = sources
-    if bld.env.FLARE_BOARD in board_sources:
-        srcs += board_sources[bld.env.FLARE_BOARD]
+    srcs = sources + buildcontrol.board_source(bld, board_sources)
     bld.objects(target='flare_flash_driver', features='c', source=srcs)
+
+
+def format(bld):
+    srcs = sources + buildcontrol.board_source(bld, board_sources, True)
+    buildcontrol.format(bld, srcs)
