@@ -100,8 +100,8 @@ static void sdhci_boot(flare_boot_plan* bp) {
 static void jtag_boot(flare_boot_plan* bp) {
   bool pressed;
 
-  printf("   JTAG boot: booting from %s in %1d   (^c for %s)"
-         "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b",
+  printf("     JTAG boot: booting from %s in %1d   (^c for %s)"
+         "\b\xbb\b\b\b\b\b\b\b\b\b\b\b\b\b",
          JTAG_BOOT_PRIMARY, FLARE_BOOT_DELAY, JTAG_BOOT_SECONDARY);
   pressed = user_break(FLARE_BOOT_DELAY, '\x0');
   printf("    \b\b\b\b\b\b\b\b\b\b\b\b\b\b%s                       \n",

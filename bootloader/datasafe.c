@@ -54,7 +54,7 @@ void flare_datasafe_init() {
 
   datasafe->crc32 = 0;
   crc32_update(&datasafe->crc32, FLARE_DS_CRC_BASE, FLARE_DS_CRC_LEN);
-  printf(" Reset Count: %d\n  Reset Code: 0x%08x\n   Boot Mode: 0x%08x\n",
+  printf("   Reset Count: %d\n    Reset Code: 0x%08x\n     Boot Mode: 0x%08x\n",
          datasafe->count, datasafe->reset, datasafe->bootmode);
 }
 

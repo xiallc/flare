@@ -55,7 +55,7 @@ int boot_script_load(flare_fs fs, const char* name, boot_script* bs) {
   size_t i;
   int rc;
 
-  printf(" Boot Script: %s ", name);
+  printf("   Boot Script: %s ", name);
 
   memset(bs, 0, sizeof(*bs));
   bs->fs = fs;

@@ -151,7 +151,7 @@ bool load_exe(const boot_script* const script, uint32_t* entry_point) {
   uint32_t length = FLARE_EXECUTABLE_SIZE;
   uint8_t checksum[CRC_CHECKSUM_SIZE];
 
-  printf("  Executable: %s", script->path);
+  printf("    Executable: %s", script->path);
   if (script->path[strlen(script->path) - 1] != '/') {
     printf("/");
   }

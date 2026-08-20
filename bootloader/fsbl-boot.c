@@ -51,20 +51,33 @@ static void
 flare_boot_board_requests(void)
 {
     bool boot_factory = false;
+    printf("  Factory Boot: ");
     if (flare_datasafe_factory_boot_requested()) {
         boot_factory = true;
+        printf("YES (requested)\n");
     } else {
-        printf("   Factory boot in %2d   (^c^f)"
-               "\b\b\b\b\b\b\b\b", FLARE_BOOT_DELAY);
+        printf("^c^f for YES else NO in %2d ", FLARE_BOOT_DELAY);
         if (user_break(FLARE_BOOT_DELAY, '\x6')) {
             boot_factory = true;
         }
-        printf("\r                              \r");
+        const int size = 27;
+        for (int i = 0; i < size; ++i) {
+            printf("\b");
+        }
+        for (int i = 0; i < size; ++i) {
+            printf(" ");
+        }
+        for (int i = 0; i < size; ++i) {
+            printf("\b");
+        }
+        if (boot_factory) {
+            printf("YES\n");
+        }
     }
     if (boot_factory) {
-        printf("Factory boot ...\n");
         factory_boot();
     }
+    printf("no\n");
 }
 
 static void boot_failure() {
@@ -86,7 +99,7 @@ int main(void) {
     board_timer_reset();
 
     printf("\n\nFlare FSBL (Apache 2.0 Licensed)\n");
-    printf("    Build ID: %s\n", flare_build_id());
+    printf("      Build ID: %s\n", flare_build_id());
 
     cache_enable();
 
@@ -100,7 +113,7 @@ int main(void) {
 
     flash_error err = flash_open(&label);
     if (err == FLASH_NO_ERROR) {
-        printf("       Flash: %s\n", label);
+        printf("         Flash: %s\n", label);
     }
 
     factory_config_load();
